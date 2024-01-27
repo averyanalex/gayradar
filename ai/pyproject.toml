@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "gayradarai"
 version = "0.1.0"
+license = "MIT"
 description = "GayRadar AI"
 authors = ["AveryanAlex <alex@averyan.ru>"]
 

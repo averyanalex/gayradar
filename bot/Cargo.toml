@@ -1,5 +1,7 @@
 [package]
 name = "gayradarbot"
+authors = ["Alexander Averyanov <alex@averyan.ru>"]
+license = "MIT"
 version = "0.1.0"
 edition = "2021"
 
