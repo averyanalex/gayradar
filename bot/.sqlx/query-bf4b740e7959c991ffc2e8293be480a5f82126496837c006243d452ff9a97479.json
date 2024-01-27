@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n INSERT INTO users ( id, last_activity )\n     VALUES ( $1, CURRENT_TIMESTAMP )\n     ON CONFLICT ( id ) DO UPDATE\n         SET last_activity = CURRENT_TIMESTAMP\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "bf4b740e7959c991ffc2e8293be480a5f82126496837c006243d452ff9a97479"
+}

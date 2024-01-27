@@ -1,0 +1,13 @@
+[package]
+name = "gayradarbot"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+reqwest = "0.11.23"
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio", "migrate"] }
+teloxide = { version = "0.12.2", features = ["ctrlc_handler", "throttle", "macros"] }
+tokio = { version = "1.35.1", features = ["full"] }
