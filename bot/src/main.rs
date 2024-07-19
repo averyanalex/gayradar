@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use reqwest::Client;
 use sqlx::PgPool;
 use teloxide::{
@@ -9,7 +9,7 @@ use teloxide::{
     dptree,
     net::Download,
     requests::{Requester, RequesterExt},
-    types::{ChatId, InputFile, Message, Update},
+    types::{InputFile, Message, Update},
 };
 use tokio::sync::Mutex;
 
@@ -47,11 +47,7 @@ async fn main() -> Result<()> {
     let db = sqlx::PgPool::connect(&std::env::var("DATABASE_URL")?).await?;
     sqlx::migrate!().run(&db).await?;
 
-    let bot = teloxide::Bot::from_env().throttle(Limits {
-        messages_per_min_chat: 30,
-        messages_per_min_channel: 600,
-        ..Default::default()
-    });
+    let bot = teloxide::Bot::from_env().throttle(Limits::default());
 
     let handler = Update::filter_message().branch(dptree::endpoint(answer));
 
@@ -95,19 +91,8 @@ async fn try_answer(db: &PgPool, bot: &Bot, msg: &Message, ai: &Ai) -> Result<()
             let res = ai.process_image(dst).await?;
 
             let photo = InputFile::memory(res);
-            let res_msg = bot.send_photo(msg.chat.id, photo).await?;
+            bot.send_photo(msg.chat.id, photo).await?;
             bot.delete_message(wait_msg.chat.id, wait_msg.id).await?;
-
-            bot.forward_message(ChatId(-1002085385505), res_msg.chat.id, res_msg.id)
-                .await?;
-            let from = msg.from().context("no user")?;
-            bot.send_message(
-                ChatId(-1002085385505),
-                from.username
-                    .clone()
-                    .map_or_else(|| from.id.to_string(), |u| format!("@{u}")),
-            )
-            .await?;
         }
         _ => {
             bot.send_message(msg.chat.id, "Просто отправьте фото человека, и бот вышлет шанс того, \
